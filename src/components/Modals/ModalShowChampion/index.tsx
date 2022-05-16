@@ -2,7 +2,12 @@ import { Button, Content, Div, DivA, DivContainer, InfoUser } from "./style";
 
 interface PopUpPrios {
   setPopup: (valor: boolean) => void;
-  team?: any;
+  team?: Team;
+}
+
+interface Team {
+  team: String;
+  wins: Number;
 }
 
 function PopUpEditUser({ setPopup, team }: PopUpPrios) {

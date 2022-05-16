@@ -1,3 +1,9 @@
-const App = () => <div>Typescript</div>;
+import Routes from "./routes";
+
+const App = () => (
+  <div>
+    <Routes />
+  </div>
+);
 
 export default App;

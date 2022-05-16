@@ -2,7 +2,7 @@ import { Button, Content, Div, DivA, DivContainer, InfoUser } from "./style";
 
 interface PopUpPrios {
   setPopup: (valor: boolean) => void;
-  team?: Team;
+  team?: Team | any;
 }
 
 interface Team {
@@ -10,13 +10,13 @@ interface Team {
   wins: Number;
 }
 
-function PopUpEditUser({ setPopup, team }: PopUpPrios) {
+function PopUpShowChampion({ setPopup, team }: PopUpPrios) {
   return (
     <DivA>
       <DivContainer>
         <Div>
           <img
-            src={require("../../assets/star-trophy.png")}
+            src={require("../../../assets/star-trophy.png")}
             alt="star-trophy.png"
           />
           <h1>
@@ -33,4 +33,4 @@ function PopUpEditUser({ setPopup, team }: PopUpPrios) {
     </DivA>
   );
 }
-export default PopUpEditUser;
+export default PopUpShowChampion;

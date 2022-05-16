@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
+import Button from "../../components/Button";
+import Header from "../../components/Header";
+import PopUpShowChampion from "../../components/Modals/ModalShowChampion";
+import DataGridDemo from "../../components/Table";
 import api from "../../services/api";
+import { Container, ContentButtons, ContentMain } from "./style";
 
 interface ChampionshipDatabase {
-    id: Number;
+    id: Number | undefined;
     abbreviation: String;
     city: String;
     conference: String;
@@ -13,15 +18,15 @@ interface ChampionshipDatabase {
 
 interface Team {
     team?: String;
-    wins?: Number;
+    wins?: Number | any;
 }
 
 const Home = () => {
 
-    const [popUpShowChampion, setPopUpShowChampion] = useState(false);
-
     const [championship, setChampionship] = useState<ChampionshipDatabase[]>([])
     const [clubs, setClubs] = useState<Team[]>([])
+
+    const [popUpShowChampion, setPopUpShowChampion] = useState(false);
 
     const changePopUpShowChampion = () => {
         setPopUpShowChampion(true);
@@ -82,9 +87,31 @@ const Home = () => {
         championship.map(item => verifyTeamWinner(item))
     }, [])
 
+    const teamWinner = clubs.find(
+        item => item.wins === Math.max(...clubs.map(item => item.wins))
+    )
+
+    console.log(teamWinner)
 
     return (
-        <h1>Home</h1>
+        <Container>
+            <Header/>
+            {popUpShowChampion && <PopUpShowChampion setPopup={setPopUpShowChampion} team={teamWinner}/>}
+            <ContentMain>
+                <h1> Championship Season 2020 </h1>
+                <h2> Pareamento JavaScript nave.rs </h2>
+                <ContentButtons>
+                <Button 
+                    text="Champion" 
+                    color="#FF0000" 
+                    onclick={changePopUpShowChampion}
+                />
+                <Button text="Classification" color="#464646"/>
+                </ContentButtons>
+                <DataGridDemo />
+            </ContentMain>
+
+        </Container>
     )
 }
 

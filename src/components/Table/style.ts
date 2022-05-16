@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
 export const Conteiner = styled.div`
-  height: 319;
-  width: "76.6%";
-  background-color: "white";
+  height: 319px;
+  width: 76.6%;
+  background: white;
   header {
     background-color: red;
     display: flex;

@@ -10,13 +10,14 @@ export const rows = [
     { id: 7, season: 2013, champion: 'Miami Heat', points: 65 },
 ];
 
-export const columns: GridColDef[] = [
+export const columnsLastChampionship: GridColDef[] = [
     { 
       field: 'season', 
       headerName: 'season', 
       width: 130, 
       align: 'center', 
-      headerAlign: "center"},
+      headerAlign: "center"
+    },
     {
       field: 'champion',
       headerName: 'champion',
@@ -27,6 +28,34 @@ export const columns: GridColDef[] = [
     },
     {
       field: 'points',
+      headerName: 'points',
+      type: 'number',
+      width: 130,
+      align: 'center' , 
+      headerAlign: "center",
+      editable: true,
+    }
+  ];
+
+
+  export const columnsClassification: GridColDef[] = [
+    { 
+      field: 'position', 
+      headerName: 'position', 
+      width: 130, 
+      align: 'center', 
+      headerAlign: "center"
+    },
+    {
+      field: 'team',
+      headerName: 'team',
+      width: 130,
+      align: 'center' , 
+      headerAlign: "center",
+      editable: true,
+    },
+    {
+      field: 'wins',
       headerName: 'points',
       type: 'number',
       width: 130,

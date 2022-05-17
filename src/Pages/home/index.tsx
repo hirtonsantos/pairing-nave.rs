@@ -4,7 +4,7 @@ import Header from "../../components/Header";
 import PopUpShowChampion from "../../components/Modals/ModalShowChampion";
 import DataGridDemo from "../../components/Table";
 import api from "../../services/api";
-import { Container, ContentButtons, ContentMain } from "./style";
+import { Container, ContentButtons, ContentImage, ContentInfo, ContentMain, Image } from "./style";
 
 interface ChampionshipDatabase {
     id: Number | undefined;
@@ -17,6 +17,8 @@ interface ChampionshipDatabase {
 }
 
 interface Team {
+    id?: Number;
+    position?: Number;
     team?: String;
     wins?: Number | any;
 }
@@ -25,11 +27,21 @@ const Home = () => {
 
     const [championship, setChampionship] = useState<ChampionshipDatabase[]>([])
     const [clubs, setClubs] = useState<Team[]>([])
+    const [buttonTextAlternative, setButtonTextAlternative] = useState<Boolean>(false)
+
+    const [refresh, setRefresh] = useState(false)
+    const [refreshClubs, setRefreshClubs] = useState(false)
 
     const [popUpShowChampion, setPopUpShowChampion] = useState(false);
+    const [showClassification, setShowClassification] = useState(false)
 
     const changePopUpShowChampion = () => {
         setPopUpShowChampion(true);
+    };
+
+    const showTableOfClassification = () => {
+        setShowClassification(!showClassification);
+        setButtonTextAlternative(!buttonTextAlternative)
     };
 
     const requestClubsSeason2020 = async (page_number: Number) => {
@@ -41,6 +53,8 @@ const Home = () => {
             if (response.data.meta.next_page){
                 const nextPage = response.data.meta.next_page
                 requestClubsSeason2020(nextPage)
+            } else {
+                setRefresh(true)
             }
         }).catch(err => console.log(err))
     }
@@ -50,7 +64,7 @@ const Home = () => {
         let teamExist: any = clubs.find(item => item.team === team_current.full_name)
         if (!teamExist){
             const clubsList = clubs
-            team = {...team, wins: 1}
+            team = {...team, wins: 1, id: clubsList.length+1}
             clubsList.push(team)
             setClubs(clubs)
         } 
@@ -82,22 +96,51 @@ const Home = () => {
         }
     }
 
+    const classificationOfChampionship = () => {
+    
+        clubs.sort(function(a,b) {
+            return a.wins > b.wins ? -1 : a.wins < b.wins ? 1 : 0;
+        });
+    
+        clubs.forEach((item, index) => {
+            const clubsList = clubs
+            clubsList[index] = { ...item, position: index+1}
+            setClubs(clubsList)
+        })
+    }
+
     useEffect (() => {
         requestClubsSeason2020(1)
-        championship.map(item => verifyTeamWinner(item))
     }, [])
+
+    useEffect(() => {
+        if (refresh){
+            championship.forEach((item, index) => {
+                verifyTeamWinner(item)
+                if (index === championship.length-1){
+                    setRefreshClubs(true)
+                }
+            })
+        }
+    }, [refresh])
+
+    useEffect(() => {
+        if (refreshClubs){
+        classificationOfChampionship()
+        }
+    }, [refreshClubs])
+
 
     const teamWinner = clubs.find(
         item => item.wins === Math.max(...clubs.map(item => item.wins))
     )
-
-    console.log(teamWinner)
-
+    
     return (
         <Container>
             <Header/>
             {popUpShowChampion && <PopUpShowChampion setPopup={setPopUpShowChampion} team={teamWinner}/>}
             <ContentMain>
+                <ContentInfo>
                 <h1> Championship Season 2020 </h1>
                 <h2> Pareamento JavaScript nave.rs </h2>
                 <ContentButtons>
@@ -106,9 +149,24 @@ const Home = () => {
                     color="#FF0000" 
                     onclick={changePopUpShowChampion}
                 />
-                <Button text="Classification" color="#464646"/>
+                <Button 
+                    text={buttonTextAlternative ? "Last Champions": "Classification"}
+                    color="#464646"
+                    onclick={showTableOfClassification}
+                />
                 </ContentButtons>
-                <DataGridDemo />
+                <DataGridDemo 
+                    show={showClassification} 
+                    teams={clubs} 
+                    refresh={refreshClubs}
+                />
+                </ContentInfo>
+                <ContentImage>
+                    <Image 
+                        src={require("../../assets/nba-logo.jpeg")}
+                        alt="nba-logo.jpeg"
+                    />
+                </ContentImage>
             </ContentMain>
 
         </Container>
